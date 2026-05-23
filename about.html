@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,11 +26,12 @@
 
 
     <style>
-
         * {
             font-family: 'Poppins', sans-serif;
         }
-        body,html{
+
+        body,
+        html {
             overflow-x: hidden;
         }
 
@@ -92,6 +90,112 @@
             opacity: 0.18;
         }
 
+        /* ===== LIGHTBOX ===== */
+        .clickable-img {
+            cursor: zoom-in;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .clickable-img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.25);
+        }
+
+        #lightbox-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        #lightbox-overlay.active {
+            display: flex;
+        }
+
+        #lightbox-overlay img {
+            max-width: 92vw;
+            max-height: 88vh;
+            border-radius: 20px;
+            object-fit: contain;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+            animation: lbZoom 0.35s cubic-bezier(.22, .68, 0, 1.2);
+        }
+
+        @keyframes lbZoom {
+            from {
+                opacity: 0;
+                transform: scale(0.78);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        #lightbox-close {
+            position: fixed;
+            top: 20px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1.5px solid rgba(212, 175, 55, 0.5);
+            color: #D4AF37;
+            font-size: 26px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s, transform 0.3s;
+            z-index: 10000;
+        }
+
+        #lightbox-close:hover {
+            background: #D4AF37;
+            color: #000;
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        /* ===== TEAM CARDS ===== */
+        .team-card {
+            position: relative;
+            border-radius: 35px;
+            overflow: hidden;
+        }
+
+        .team-card img {
+            width: 100%;
+            height: 420px;
+            object-fit: cover;
+            object-position: top;
+            transition: transform 0.6s ease;
+        }
+
+        @media(max-width:640px) {
+            .team-card img {
+                height: 340px;
+            }
+        }
+
+        .team-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .team-card-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(8, 17, 32, 0.97) 60%, transparent);
+            padding: 30px 24px 24px;
+        }
     </style>
 
 </head>
@@ -105,15 +209,14 @@
     <div class="hero-circle bg-blue-500 w-72 h-72 bottom-0 right-0"></div>
 
 
-   <div class="nav"></div>
+    <div class="nav"></div>
 
 
     <!-- HERO -->
 
     <section class="relative h-[75vh] flex items-center overflow-hidden">
 
-        <img src="./images/backgroundimage.jpg"
-            class="absolute inset-0 w-full h-full object-cover" />
+        <img src="./images/backgroundimage.jpg" class="absolute inset-0 w-full h-full object-cover" />
 
         <div class="absolute inset-0 hero-overlay"></div>
 
@@ -145,74 +248,99 @@
 
     <section class="py-24 lg:py-32">
 
-    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
 
-        <div class="grid lg:grid-cols-2 gap-16 items-center">
-
-
-            <!-- Founder Image -->
-            <div class="relative" data-aos="fade-right">
-
-                <img
-                    src="./images/poonam.jpeg"
-                    class="rounded-[35px] h-[500px] sm:h-[600px] w-full object-cover shadow-2xl hover:scale-[1.02] transition duration-500" />
+            <div class="flex flex-wrap gap-10 items-center">
 
 
-                <!-- Founder Card -->
-                <div
-                    class="absolute bottom-6 left-6 glass px-6 py-4 rounded-2xl border border-white/10">
+                <!-- Founder Image -->
+                <div class=" shadow-2xl" data-aos="fade-right">
+                    <img src="/images/poonam.jpeg" alt="Poonam Gautam - Founder &amp; CEO"
+                        class="clickable-img md:h-[600px] rounded-2xl" />
 
-                    <p class="text-gray-300 text-xs uppercase tracking-[0.3em]">
-                        Founder & CEO
+                </div>
+
+
+
+                <!-- Content -->
+                <div data-aos="fade-left" class="w-[700px]">
+
+                    <p class="uppercase tracking-[0.4em] text-sm gold-text mb-5">
+                        Our Story
                     </p>
 
-                    <h3 class="text-2xl font-semibold gold-text mt-1">
-                        Poonam Gautam
-                    </h3>
+                    <h2 class="heading-font text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
+                        Delivering Indian Excellence To Global Markets
+                    </h2>
+
+                    <p class="text-gray-300 leading-8 mt-8 text-lg">
+
+                        Established in 2025, PS Global Exports delivers premium Indian
+                        products to international markets with trust, quality and
+                        reliable export solutions.
+
+                        We specialize in textiles, herbal products, gemstones,
+                        beauty essentials and handcrafted lifestyle collections.
+
+                    </p>
+
+                    <p class="text-gray-300 text-lg leading-8 mt-6">
+
+                        We believe in quality assurance, ethical sourcing,
+                        competitive pricing and long-term international
+                        business partnerships.
+
+                    </p>
 
                 </div>
 
             </div>
 
+        </div>
+
+    </section>
 
 
-            <!-- Content -->
-            <div data-aos="fade-left">
+    <!-- TEAM SECTION -->
 
-                <p class="uppercase tracking-[0.4em] text-sm gold-text mb-5">
-                    Our Story
-                </p>
+    <section class="py-24 lg:py-32 bg-[#0d1728]">
 
-                <h2 class="heading-font text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
-                    Delivering Indian Excellence To Global Markets
+        <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+
+            <div class="text-center max-w-3xl mx-auto" data-aos="fade-up">
+                <p class="uppercase tracking-[0.4em] text-sm gold-text">Our Team</p>
+                <h2 class="heading-font text-4xl sm:text-5xl lg:text-6xl font-bold mt-5 leading-tight">
+                    The People Behind PS Global
                 </h2>
+            </div>
 
-                <p class="text-gray-300 leading-8 mt-8 text-lg">
+            <div class="grid sm:grid-cols-2 gap-10 mt-20 max-w-3xl mx-auto">
 
-                    Established in 2025, PS Global Exports delivers premium Indian
-                    products to international markets with trust, quality and
-                    reliable export solutions.
+                <!-- Poonam Card -->
+                <div class="team-card shadow-2xl" data-aos="zoom-in">
+                    <img src="./images/poonam.jpeg" alt="Poonam Gautam" class="clickable-img"
+                        onclick="openLightbox(this.src)" />
+                    <div class="team-card-info">
+                        <p class="text-gray-400 text-xs uppercase tracking-widest">Founder &amp; CEO</p>
+                        <h3 class="text-xl font-semibold gold-text mt-1">Poonam Gautam</h3>
+                    </div>
+                </div>
 
-                    We specialize in textiles, herbal products, gemstones,
-                    beauty essentials and handcrafted lifestyle collections.
-
-                </p>
-
-                <p class="text-gray-300 text-lg leading-8 mt-6">
-
-                    We believe in quality assurance, ethical sourcing,
-                    competitive pricing and long-term international
-                    business partnerships.
-
-                </p>
+                <!-- Sachin Kamath Card -->
+                <div class="team-card shadow-2xl" data-aos="zoom-in" data-aos-delay="200">
+                    <img src="./images/newImages/Sachin-Kamath.jpeg" alt="Sachin Kamath" class="clickable-img"
+                        onclick="openLightbox(this.src)" />
+                    <div class="team-card-info">
+                        <p class="text-gray-400 text-xs uppercase tracking-widest">Managing Director</p>
+                        <h3 class="text-xl font-semibold gold-text mt-1">Sachin Kamath</h3>
+                    </div>
+                </div>
 
             </div>
 
         </div>
 
-    </div>
-
-</section>
+    </section>
 
 
     <!-- MISSION VISION -->
@@ -224,8 +352,7 @@
             <div class="grid lg:grid-cols-2 gap-10">
 
                 <!-- Mission -->
-                <div class="glass rounded-[35px] p-10 hover:-translate-y-3 transition duration-500"
-                    data-aos="fade-up">
+                <div class="glass rounded-[35px] p-10 hover:-translate-y-3 transition duration-500" data-aos="fade-up">
 
                     <div class="w-20 h-20 rounded-full bg-[#D4AF37]/20 flex items-center justify-center">
                         <i class="ri-focus-3-line text-4xl gold-text"></i>
@@ -244,8 +371,8 @@
 
 
                 <!-- Vision -->
-                <div class="glass rounded-[35px] p-10 hover:-translate-y-3 transition duration-500"
-                    data-aos="fade-up" data-aos-delay="200">
+                <div class="glass rounded-[35px] p-10 hover:-translate-y-3 transition duration-500" data-aos="fade-up"
+                    data-aos-delay="200">
 
                     <div class="w-20 h-20 rounded-full bg-[#D4AF37]/20 flex items-center justify-center">
                         <i class="ri-eye-line text-4xl gold-text"></i>
@@ -290,8 +417,7 @@
 
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-20">
 
-                <div class="glass rounded-[30px] p-8 hover:-translate-y-3 transition duration-500"
-                    data-aos="zoom-in">
+                <div class="glass rounded-[30px] p-8 hover:-translate-y-3 transition duration-500" data-aos="zoom-in">
 
                     <i class="ri-award-line text-5xl gold-text"></i>
 
@@ -302,8 +428,8 @@
                 </div>
 
 
-                <div class="glass rounded-[30px] p-8 hover:-translate-y-3 transition duration-500"
-                    data-aos="zoom-in" data-aos-delay="200">
+                <div class="glass rounded-[30px] p-8 hover:-translate-y-3 transition duration-500" data-aos="zoom-in"
+                    data-aos-delay="200">
 
                     <i class="ri-global-line text-5xl gold-text"></i>
 
@@ -314,8 +440,8 @@
                 </div>
 
 
-                <div class="glass rounded-[30px] p-8 hover:-translate-y-3 transition duration-500"
-                    data-aos="zoom-in" data-aos-delay="400">
+                <div class="glass rounded-[30px] p-8 hover:-translate-y-3 transition duration-500" data-aos="zoom-in"
+                    data-aos-delay="400">
 
                     <i class="ri-shield-check-line text-5xl gold-text"></i>
 
@@ -326,8 +452,8 @@
                 </div>
 
 
-                <div class="glass rounded-[30px] p-8 hover:-translate-y-3 transition duration-500"
-                    data-aos="zoom-in" data-aos-delay="600">
+                <div class="glass rounded-[30px] p-8 hover:-translate-y-3 transition duration-500" data-aos="zoom-in"
+                    data-aos-delay="600">
 
                     <i class="ri-customer-service-line text-5xl gold-text"></i>
 
@@ -362,8 +488,7 @@
 
                 </div>
 
-                <div class="glass rounded-[30px] p-10 text-center floating" data-aos="fade-up"
-                    data-aos-delay="200">
+                <div class="glass rounded-[30px] p-10 text-center floating" data-aos="fade-up" data-aos-delay="200">
 
                     <h3 class="text-5xl font-bold gold-text">100+</h3>
 
@@ -373,8 +498,7 @@
 
                 </div>
 
-                <div class="glass rounded-[30px] p-10 text-center floating" data-aos="fade-up"
-                    data-aos-delay="400">
+                <div class="glass rounded-[30px] p-10 text-center floating" data-aos="fade-up" data-aos-delay="400">
 
                     <h3 class="text-5xl font-bold gold-text">99%</h3>
 
@@ -384,8 +508,7 @@
 
                 </div>
 
-                <div class="glass rounded-[30px] p-10 text-center floating" data-aos="fade-up"
-                    data-aos-delay="600">
+                <div class="glass rounded-[30px] p-10 text-center floating" data-aos="fade-up" data-aos-delay="600">
 
                     <h3 class="text-5xl font-bold gold-text">24/7</h3>
 
@@ -444,9 +567,15 @@
     </section>
 
 
+    <!-- LIGHTBOX MODAL -->
+    <div id="lightbox-overlay" role="dialog" aria-modal="true" aria-label="Full image view" onclick="closeLightbox()">
+        <button id="lightbox-close" onclick="closeLightbox()" aria-label="Close">&times;</button>
+        <img id="lightbox-img" src="" alt="Full view" onclick="event.stopPropagation()" />
+    </div>
+
     <!-- FOOTER -->
 
-   <div class="footer"></div>
+    <div class="footer"></div>
     <script src="nav.js"></script>
     <script src="footer.js"></script>
 
@@ -456,12 +585,19 @@
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 
     <script>
+        AOS.init({ duration: 1000, once: true });
 
-        AOS.init({
-            duration: 1000,
-            once: true,
-        });
-
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox-overlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox-overlay').classList.remove('active');
+            document.getElementById('lightbox-img').src = '';
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
     </script>
 
 </body>

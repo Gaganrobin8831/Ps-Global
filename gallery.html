@@ -1,529 +1,363 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Gallery | PS Global Exports</title>
-
-    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700;800&display=swap"
-        rel="stylesheet">
-
-    <!-- AOS -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
-
-    <!-- Remix Icon -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
 
-
     <style>
-        * {
-            font-family: 'Poppins', sans-serif;
+        *{ font-family:'Poppins',sans-serif; }
+        body,html{ overflow-x:hidden; }
+        html{ scroll-behavior:smooth; }
+        body{ background:#081120; color:white; }
+
+        .heading-font{ font-family:'Playfair Display',serif; }
+        .gold-text{ color:#D4AF37; }
+        .glass{ background:rgba(255,255,255,0.06); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.08); }
+        .hero-overlay{ background:linear-gradient(to right, rgba(8,17,32,0.96), rgba(8,17,32,0.55)); }
+        .hero-circle{ position:absolute; border-radius:9999px; filter:blur(100px); opacity:0.18; }
+
+        /* FILTER BUTTONS */
+        .filter-btn{
+            padding:10px 24px; border-radius:9999px; font-size:0.85rem; font-weight:500;
+            border:1.5px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.7);
+            cursor:pointer; transition:all 0.3s; background:transparent; white-space:nowrap;
         }
-        body,html{
-            overflow-x: hidden;
+        .filter-btn:hover{ border-color:#D4AF37; color:#D4AF37; }
+        .filter-btn.active{ background:#D4AF37; border-color:#D4AF37; color:#000; font-weight:600; }
+
+        /* GALLERY GRID */
+        .gallery-grid{ columns:2; column-gap:16px; }
+        @media(min-width:768px){ .gallery-grid{ columns:3; } }
+        @media(min-width:1024px){ .gallery-grid{ columns:4; } }
+
+        .gallery-item{
+            break-inside:avoid; margin-bottom:16px; border-radius:20px;
+            overflow:hidden; position:relative; cursor:zoom-in;
+            display:block;
         }
-
-        html {
-            scroll-behavior: smooth;
+        .gallery-item img{
+            width:100%; display:block;
+            transition:transform 0.5s ease;
         }
-
-        body {
-            background: #081120;
-            color: white;
-            overflow-x: hidden;
+        .gallery-item:hover img{ transform:scale(1.07); }
+        .gallery-item .img-overlay{
+            position:absolute; inset:0;
+            background:linear-gradient(to top, rgba(8,17,32,0.85) 0%, transparent 55%);
+            opacity:0; transition:opacity 0.4s;
+            display:flex; align-items:flex-end; padding:16px;
         }
+        .gallery-item:hover .img-overlay{ opacity:1; }
+        .gallery-item.hidden-item{ display:none; }
 
-        .heading-font {
-            font-family: 'Playfair Display', serif;
+        /* LIGHTBOX */
+        #lightbox-overlay{
+            display:none; position:fixed; inset:0; z-index:9999;
+            background:rgba(0,0,0,0.93); backdrop-filter:blur(10px);
+            align-items:center; justify-content:center; padding:20px;
         }
-
-        .gold-text {
-            color: #D4AF37;
+        #lightbox-overlay.active{ display:flex; }
+        #lightbox-overlay img{
+            max-width:92vw; max-height:88vh; border-radius:18px;
+            object-fit:contain; box-shadow:0 30px 80px rgba(0,0,0,0.8);
+            animation:lbZoom .35s cubic-bezier(.22,.68,0,1.2);
         }
-
-        .glass {
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        @keyframes lbZoom{
+            from{ opacity:0; transform:scale(0.78); }
+            to{ opacity:1; transform:scale(1); }
         }
-
-        .hero-overlay {
-            background:
-                linear-gradient(to right,
-                    rgba(8, 17, 32, 0.96),
-                    rgba(8, 17, 32, 0.55));
+        #lightbox-close{
+            position:fixed; top:18px; right:20px; width:48px; height:48px;
+            border-radius:50%; background:rgba(212,175,55,0.15);
+            border:1.5px solid rgba(212,175,55,0.5); color:#D4AF37;
+            font-size:28px; cursor:pointer; display:flex;
+            align-items:center; justify-content:center;
+            transition:background 0.3s, transform 0.3s; z-index:10000;
+            line-height:1;
         }
-
-        .hero-circle {
-            position: absolute;
-            border-radius: 9999px;
-            filter: blur(100px);
-            opacity: 0.18;
+        #lightbox-close:hover{ background:#D4AF37; color:#000; transform:rotate(90deg) scale(1.1); }
+        #lightbox-caption{
+            position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+            background:rgba(8,17,32,0.85); border:1px solid rgba(212,175,55,0.3);
+            color:#D4AF37; padding:8px 24px; border-radius:999px;
+            font-size:0.85rem; letter-spacing:0.05em; z-index:10000;
+            backdrop-filter:blur(6px);
         }
-
-        .gallery-card img {
-            transition: 0.8s;
+        #lightbox-prev, #lightbox-next{
+            position:fixed; top:50%; transform:translateY(-50%);
+            width:48px; height:48px; border-radius:50%;
+            background:rgba(212,175,55,0.15); border:1.5px solid rgba(212,175,55,0.4);
+            color:#D4AF37; font-size:22px; cursor:pointer;
+            display:flex; align-items:center; justify-content:center;
+            transition:background 0.3s; z-index:10000;
         }
-
-        .gallery-card:hover img {
-            transform: scale(1.08);
-        }
-
-        .gallery-card:hover .overlay {
-            opacity: 1;
-        }
-
-        .overlay {
-            opacity: 0;
-            transition: 0.5s;
-        }
-
-        .floating {
-            animation: float 5s ease-in-out infinite;
-        }
-
-        @keyframes float {
-
-            0% {
-                transform: translateY(0px);
-            }
-
-            50% {
-                transform: translateY(-12px);
-            }
-
-            100% {
-                transform: translateY(0px);
-            }
-
-        }
-
-        @media(max-width:768px) {
-
-            .hero-heading {
-                font-size: 3rem;
-                line-height: 1.1;
-            }
-
+        #lightbox-prev{ left:16px; }
+        #lightbox-next{ right:16px; }
+        #lightbox-prev:hover, #lightbox-next:hover{ background:#D4AF37; color:#000; }
+        @media(max-width:640px){
+            #lightbox-prev{ left:6px; }
+            #lightbox-next{ right:6px; }
         }
     </style>
-
 </head>
 
 <body>
-
-
-    <!-- ================= BACKGROUND BLUR ================= -->
-
     <div class="hero-circle bg-yellow-400 w-72 h-72 top-0 left-0"></div>
     <div class="hero-circle bg-blue-500 w-72 h-72 bottom-0 right-0"></div>
 
+    <div class="nav"></div>
 
-<div class="nav"></div>
-
-
-    <!-- ================= HERO SECTION ================= -->
-
+    <!-- HERO -->
     <section class="relative h-[75vh] flex items-center overflow-hidden">
-
-        <!-- Background -->
-        <img src="./images/backgroundimage.jpg"
-            class="absolute inset-0 w-full h-full object-cover" />
-
+        <img src="./images/backgroundimage.jpg" class="absolute inset-0 w-full h-full object-cover" alt="Background" />
         <div class="absolute inset-0 hero-overlay"></div>
-
-
-        <!-- Content -->
         <div class="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 w-full pt-20">
-
             <div class="max-w-4xl" data-aos="fade-right">
-
-                <p class="uppercase tracking-[0.4em] mt-20 text-sm gold-text mb-5">
-
-                    Our Gallery
-
-                </p>
-
-                <h1
-                    class="hero-heading heading-font text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight">
-
-                    Showcasing Our
-                    Premium Export Collections
-
+                <p class="uppercase tracking-[0.4em] mt-20 text-sm gold-text mb-5">Our Gallery</p>
+                <h1 class="heading-font text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight">
+                    Showcasing Our Premium Export Collections
                 </h1>
-
                 <p class="text-gray-300 text-lg leading-8 mt-8 max-w-2xl">
-
-                    Explore our curated gallery of premium textiles,
-                    herbal products, gemstones, cosmetics,
-                    fashion apparel and handcrafted lifestyle collections.
-
+                    Explore our curated gallery of premium textiles, herbal products, gemstones, cosmetics, fashion apparel and handcrafted lifestyle collections.
                 </p>
-
             </div>
-
         </div>
-
     </section>
 
 
-
-    <!-- ================= GALLERY GRID ================= -->
-
+    <!-- GALLERY SECTION -->
     <section class="py-24 lg:py-32">
-
         <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
 
-            <!-- Heading -->
             <div class="text-center max-w-3xl mx-auto" data-aos="fade-up">
+                <p class="uppercase tracking-[0.4em] text-sm gold-text">Premium Showcase</p>
+                <h2 class="heading-font text-4xl sm:text-5xl lg:text-6xl font-bold mt-5">Our Product Gallery</h2>
+            </div>
 
-                <p class="uppercase tracking-[0.4em] text-sm gold-text">
+            <!-- FILTER BUTTONS -->
+            <div class="flex flex-wrap justify-center gap-3 mt-14" data-aos="fade-up" data-aos-delay="100">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="jewellery">Jewellery &amp; Gemstones</button>
+                <button class="filter-btn" data-filter="food">Food &amp; Spices</button>
+                <button class="filter-btn" data-filter="textiles">Textiles</button>
+               
+            </div>
 
-                    Premium Showcase
+            <!-- GALLERY GRID -->
+            <div class="gallery-grid mt-14" id="gallery-grid">
 
-                </p>
+                <!-- JEWELLERY -->
+                <div class="gallery-item" data-cat="jewellery" data-title="Diamond Collection" onclick="openLightbox(this)" data-aos="zoom-in">
+                    <img src="./images/newImages/allDimaond.jpeg" alt="Diamond Collection" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Diamond Collection</span></div>
+                </div>
+                <div class="gallery-item" data-cat="jewellery" data-title="Diamond Ring" onclick="openLightbox(this)" data-aos="zoom-in" data-aos-delay="50">
+                    <img src="./images/newImages/dimaondRing.jpeg" alt="Diamond Ring" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Diamond Ring</span></div>
+                </div>
+                <div class="gallery-item" data-cat="jewellery" data-title="Diamond" onclick="openLightbox(this)" data-aos="zoom-in" data-aos-delay="100">
+                    <img src="./images/newImages/diamond.jpeg" alt="Diamond" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Diamond</span></div>
+                </div>
+                <div class="gallery-item" data-cat="jewellery" data-title="Diamond 2" onclick="openLightbox(this)" data-aos="zoom-in" data-aos-delay="150">
+                    <img src="./images/newImages/diaomad2.jpeg" alt="Diamond 2" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Diamond</span></div>
+                </div>
+                <div class="gallery-item" data-cat="jewellery" data-title="Diamond Category" onclick="openLightbox(this)" data-aos="zoom-in" data-aos-delay="200">
+                    <img src="./images/newImages/dimondCat.jpeg" alt="Diamond Category" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Gemstone Category</span></div>
+                </div>
+                <div class="gallery-item" data-cat="jewellery" data-title="More Diamonds" onclick="openLightbox(this)" data-aos="zoom-in" data-aos-delay="250">
+                    <img src="./images/newImages/moreDimaon.jpeg" alt="More Diamonds" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">More Diamonds</span></div>
+                </div>
+                <div class="gallery-item" data-cat="jewellery" data-title="Vase & Decor" onclick="openLightbox(this)" data-aos="zoom-in" data-aos-delay="300">
+                    <img src="./images/newImages/vass.jpeg" alt="Vase" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Vase &amp; Decor</span></div>
+                </div>
 
-                <h2
-                    class="heading-font text-4xl sm:text-5xl lg:text-6xl font-bold mt-5">
+                <!-- FOOD & SPICES -->
+                <div class="gallery-item" data-cat="food" data-title="Mango Pickle" onclick="openLightbox(this)" data-aos="zoom-in">
+                    <img src="./images/newImages/MangoPickle.jpeg" alt="Mango Pickle" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Mango Pickle</span></div>
+                </div>
+                <div class="gallery-item" data-cat="food" data-title="Non-Veg Pickle" onclick="openLightbox(this)" data-aos="zoom-in" data-aos-delay="50">
+                    <img src="./images/newImages/NonVegPickle.jpeg" alt="Non-Veg Pickle" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Non-Veg Pickle</span></div>
+                </div>
+                <div class="gallery-item" data-cat="food" data-title="Tomato Chutney" onclick="openLightbox(this)" data-aos="zoom-in" data-aos-delay="100">
+                    <img src="./images/newImages/tomatoChatni.jpeg" alt="Tomato Chutney" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Tomato Chutney</span></div>
+                </div>
+                <div class="gallery-item" data-cat="food" data-title="Herbal Powder" onclick="openLightbox(this)" data-aos="zoom-in" data-aos-delay="150">
+                    <img src="./images/newImages/Poweder.jpeg" alt="Powder" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Herbal Powder</span></div>
+                </div>
+                <div class="gallery-item" data-cat="food" data-title="Powder Category" onclick="openLightbox(this)" data-aos="zoom-in" data-aos-delay="200">
+                    <img src="./images/newImages/allPowederCat.jpeg" alt="All Powder" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Powder Category</span></div>
+                </div>
+                <div class="gallery-item" data-cat="food" data-title="Powder Detail" onclick="openLightbox(this)" data-aos="zoom-in" data-aos-delay="250">
+                    <img src="./images/newImages/allPowederCatdetail.jpeg" alt="Powder Detail" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Powder Detail</span></div>
+                </div>
+                <div class="gallery-item" data-cat="food" data-title="Powder Cat" onclick="openLightbox(this)" data-aos="zoom-in" data-aos-delay="300">
+                    <img src="./images/newImages/powderCat.jpeg" alt="Powder Cat" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Spice Powder</span></div>
+                </div>
+                <div class="gallery-item" data-cat="food" data-title="Powder 2" onclick="openLightbox(this)" data-aos="zoom-in" data-aos-delay="350">
+                    <img src="./images/newImages/poweder2.jpeg" alt="Powder 2" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Herbal Powder</span></div>
+                </div>
+                <div class="gallery-item" data-cat="food" data-title="Powder 3" onclick="openLightbox(this)" data-aos="zoom-in" data-aos-delay="400">
+                    <img src="./images/newImages/poweder3.jpeg" alt="Powder 3" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Herbal Powder</span></div>
+                </div>
+                <div class="gallery-item" data-cat="food" data-title="Veg Powder" onclick="openLightbox(this)" data-aos="zoom-in" data-aos-delay="450">
+                    <img src="./images/newImages/vegPoweder.jpeg" alt="Veg Powder" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Veg Powder</span></div>
+                </div>
 
-                    Our Product Gallery
+                <!-- TEXTILES -->
+                <div class="gallery-item" data-cat="textiles" data-title="Towel 1" onclick="openLightbox(this)" data-aos="zoom-in">
+                    <img src="./images/newImages/towel1.jpeg" alt="Towel" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Premium Towels</span></div>
+                </div>
+                <div class="gallery-item" data-cat="textiles" data-title="Towel 2" onclick="openLightbox(this)" data-aos="zoom-in" data-aos-delay="50">
+                    <img src="./images/newImages/towel2.jpeg" alt="Towel 2" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Premium Towels</span></div>
+                </div>
+                <div class="gallery-item" data-cat="textiles" data-title="Towel 3" onclick="openLightbox(this)" data-aos="zoom-in" data-aos-delay="100">
+                    <img src="./images/newImages/towel3.jpeg" alt="Towel 3" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Premium Towels</span></div>
+                </div>
+                <div class="gallery-item" data-cat="textiles" data-title="Stole" onclick="openLightbox(this)" data-aos="zoom-in" data-aos-delay="150">
+                    <img src="./images/newImages/stechu.jpeg" alt="Stole" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Stole</span></div>
+                </div>
+                <div class="gallery-item" data-cat="textiles" data-title="Stole 2" onclick="openLightbox(this)" data-aos="zoom-in" data-aos-delay="200">
+                    <img src="./images/newImages/stechu2.jpeg" alt="Stole 2" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Stole</span></div>
+                </div>
 
-                </h2>
+                <!-- EVENTS -->
+                <div class="gallery-item" data-cat="events" data-title="Auction Event" onclick="openLightbox(this)" data-aos="zoom-in">
+                    <img src="./images/newImages/Auction1.jpeg" alt="Auction" loading="lazy" />
+                    <div class="img-overlay"><span class="text-white text-sm font-semibold">Auction Event</span></div>
+                </div>
+
+               
 
             </div>
 
-
-
-            <!-- Masonry Style Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-20">
-
-
-                <!-- CARD -->
-
-                <div
-                    class="gallery-card relative overflow-hidden rounded-[35px] lg:row-span-2 h-[550px]"
-                    data-aos="zoom-in">
-
-                    <img src="./images/textile.jpg" alt="Textile Products"
-                        class="w-full h-full object-cover" />
-
-                    <div
-                        class="overlay absolute inset-0 bg-black/60 flex flex-col justify-end p-8">
-
-                        <h3 class="text-3xl font-semibold">
-                            Textile Products
-                        </h3>
-
-                        <p class="text-gray-300 mt-3">
-                            Premium fabrics & towels.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- CARD -->
-
-                <div
-                    class="gallery-card relative overflow-hidden rounded-[35px] h-[260px]"
-                    data-aos="zoom-in"
-                    data-aos-delay="100">
-
-                    <img src="./images/product.jpg" alt="Cosmetic Products"
-                        class="w-full h-full object-cover" />
-
-                    <div
-                        class="overlay absolute inset-0 bg-black/60 flex flex-col justify-end p-6">
-
-                        <h3 class="text-2xl font-semibold">
-                            Beauty Products
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- CARD -->
-
-                <div
-                    class="gallery-card relative overflow-hidden rounded-[35px] h-[260px]"
-                    data-aos="zoom-in"
-                    data-aos-delay="200">
-
-                    <img src="./images/imag.jpeg" alt="Gemstone Products"
-                        class="w-full h-full object-cover" />
-
-                    <div
-                        class="overlay absolute inset-0 bg-black/60 flex flex-col justify-end p-6">
-
-                        <h3 class="text-2xl font-semibold">
-                            Gemstones
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- CARD -->
-
-                <div
-                    class="gallery-card relative overflow-hidden rounded-[35px] lg:row-span-2 h-[550px]"
-                    data-aos="zoom-in"
-                    data-aos-delay="300">
-
-                    <img src="./images/fashion.jpg" alt="Fashion Apparel"
-                        class="w-full h-full object-cover" />
-
-                    <div
-                        class="overlay absolute inset-0 bg-black/60 flex flex-col justify-end p-8">
-
-                        <h3 class="text-3xl font-semibold">
-                            Fashion Apparel
-                        </h3>
-
-                        <p class="text-gray-300 mt-3">
-                            Luxury export garments.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- CARD -->
-
-                <div
-                    class="gallery-card relative overflow-hidden rounded-[35px] h-[260px]"
-                    data-aos="zoom-in"
-                    data-aos-delay="400">
-
-                    <img src="./images/herbal.jpg" alt="Herbal Products"
-                        class="w-full h-full object-cover" />
-
-                    <div
-                        class="overlay absolute inset-0 bg-black/60 flex flex-col justify-end p-6">
-
-                        <h3 class="text-2xl font-semibold">
-                            Herbal Products
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- CARD -->
-
-                <div
-                    class="gallery-card relative overflow-hidden rounded-[35px] h-[260px]"
-                    data-aos="zoom-in"
-                    data-aos-delay="500">
-
-                    <img src="./images/handcraft.jpg" alt="Handcrafted Decor"
-                        class="w-full h-full object-cover" />
-
-                    <div
-                        class="overlay absolute inset-0 bg-black/60 flex flex-col justify-end p-6">
-
-                        <h3 class="text-2xl font-semibold">
-                            Handcrafted Decor
-                        </h3>
-
-                    </div>
-
-                </div>
-
-            </div>
+            <!-- No results -->
+            <p id="no-results" class="text-center text-gray-400 text-lg mt-16 hidden">No images in this category yet.</p>
 
         </div>
-
     </section>
 
 
-
-    <!-- ================= EXPORT SHOWCASE ================= -->
-
-    <section class="py-24 lg:py-32 bg-[#0c1728] overflow-hidden">
-
-        <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
-
-                <!-- Left -->
-                <div data-aos="fade-right">
-
-                    <p class="uppercase tracking-[0.4em] text-sm gold-text mb-5">
-
-                        Global Presence
-
-                    </p>
-
-                    <h2
-                        class="heading-font text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
-
-                        Exporting Quality
-                        Worldwide
-
-                    </h2>
-
-                    <p class="text-gray-300 text-lg leading-8 mt-8">
-
-                        Our products are crafted with excellence and delivered
-                        globally with premium packaging, trusted logistics
-                        and international quality standards.
-
-                    </p>
-
-                    <div class="grid grid-cols-2 gap-6 mt-10">
-
-                        <div class="glass rounded-[30px] p-8 text-center floating">
-
-                            <h3 class="text-5xl font-bold gold-text">
-                                20+
-                            </h3>
-
-                            <p class="text-gray-300 mt-3">
-                                Countries
-                            </p>
-
-                        </div>
-
-                        <div class="glass rounded-[30px] p-8 text-center floating">
-
-                            <h3 class="text-5xl font-bold gold-text">
-                                100+
-                            </h3>
-
-                            <p class="text-gray-300 mt-3">
-                                Products
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </div>
+    <!-- LIGHTBOX -->
+    <div id="lightbox-overlay" role="dialog" aria-modal="true" onclick="closeLightbox()">
+        <button id="lightbox-close" onclick="closeLightbox()" aria-label="Close">&times;</button>
+        <button id="lightbox-prev" onclick="event.stopPropagation(); shiftLightbox(-1)" aria-label="Previous">&#8249;</button>
+        <img id="lightbox-img" src="" alt="Full view" onclick="event.stopPropagation()" />
+        <button id="lightbox-next" onclick="event.stopPropagation(); shiftLightbox(1)" aria-label="Next">&#8250;</button>
+        <div id="lightbox-caption"></div>
+    </div>
 
 
-
-                <!-- Right -->
-                <div
-                    class="relative rounded-[40px] overflow-hidden h-[500px]"
-                    data-aos="fade-left">
-
-                    <img src="./images/bg.jpg"
-                        class="w-full h-full object-cover hover:scale-105 transition duration-700" />
-
-                    <div
-                        class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- ================= CTA ================= -->
-
-    <section class="py-24 lg:py-32">
-
+    <!-- CTA -->
+    <section class="py-24 lg:py-32 bg-[#0c1728]">
         <div class="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8">
-
-            <div
-                class="glass rounded-[40px] p-10 sm:p-14 lg:p-16 text-center"
-                data-aos="zoom-in">
-
-                <p class="uppercase tracking-[0.4em] text-sm gold-text">
-
-                    Let’s Connect
-
+            <div class="glass rounded-[40px] p-10 sm:p-14 lg:p-16 text-center" data-aos="zoom-in">
+                <p class="uppercase tracking-[0.4em] text-sm gold-text">Let's Connect</p>
+                <h2 class="heading-font text-4xl sm:text-5xl lg:text-6xl font-bold mt-5 leading-tight">Looking For Premium Export Products?</h2>
+                <p class="text-gray-300 text-lg leading-8 mt-8 max-w-3xl mx-auto">
+                    Connect with PS Global Exports for premium quality products, trusted worldwide delivery and long-term business partnerships.
                 </p>
-
-                <h2
-                    class="heading-font text-4xl sm:text-5xl lg:text-6xl font-bold mt-5 leading-tight">
-
-                    Looking For Premium
-                    Export Products?
-
-                </h2>
-
-                <p
-                    class="text-gray-300 text-lg leading-8 mt-8 max-w-3xl mx-auto">
-
-                    Connect with PS Global Exports for premium quality products,
-                    trusted worldwide delivery and long-term business partnerships.
-
-                </p>
-
                 <div class="flex flex-wrap justify-center gap-5 mt-10">
-
-                    <a href="contact.html"
-                        class="bg-[#D4AF37] hover:bg-yellow-500 text-black font-semibold px-10 py-4 rounded-full transition duration-300 hover:scale-105">
-
-                        Send Inquiry
-
-                    </a>
-
-                    <a href="products.html"
-                        class="border border-white/20 hover:border-[#D4AF37] hover:text-[#D4AF37] px-10 py-4 rounded-full transition duration-300">
-
-                        View Products
-
-                    </a>
-
+                    <a href="contact.html" class="bg-[#D4AF37] hover:bg-yellow-500 text-black font-semibold px-10 py-4 rounded-full transition duration-300 hover:scale-105">Send Inquiry</a>
+                    <a href="products.html" class="border border-white/20 hover:border-[#D4AF37] hover:text-[#D4AF37] px-10 py-4 rounded-full transition duration-300">View Products</a>
                 </div>
-
             </div>
-
         </div>
-
     </section>
 
 
-
-    <!-- ================= FOOTER ================= -->
-
-   <div class="footer"></div>
+    <div class="footer"></div>
     <script src="nav.js"></script>
     <script src="footer.js"></script>
-
-
-    <!-- ================= AOS ================= -->
-
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-
     <script>
+        AOS.init({ duration: 900, once: true });
 
-        AOS.init({
-            duration: 1000,
-            once: true,
+        /* ===== FILTER ===== */
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const items = document.querySelectorAll('.gallery-item');
+        const noResults = document.getElementById('no-results');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const f = btn.dataset.filter;
+                let visible = 0;
+                items.forEach(item => {
+                    const show = f === 'all' || item.dataset.cat === f;
+                    item.style.display = show ? 'block' : 'none';
+                    if (show) visible++;
+                });
+                noResults.classList.toggle('hidden', visible > 0);
+            });
         });
 
+        /* ===== LIGHTBOX ===== */
+        let currentItems = [];
+        let currentIdx = 0;
+
+        function getVisibleItems() {
+            return Array.from(items).filter(i => i.style.display !== 'none');
+        }
+
+        function openLightbox(el) {
+            currentItems = getVisibleItems();
+            currentIdx = currentItems.indexOf(el);
+            showSlide(currentIdx);
+            document.getElementById('lightbox-overlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function showSlide(idx) {
+            const el = currentItems[idx];
+            const img = el.querySelector('img');
+            const title = el.dataset.title || '';
+            document.getElementById('lightbox-img').src = img.src;
+            document.getElementById('lightbox-caption').textContent = title;
+        }
+
+        function shiftLightbox(dir) {
+            currentIdx = (currentIdx + dir + currentItems.length) % currentItems.length;
+            showSlide(currentIdx);
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox-overlay').classList.remove('active');
+            document.getElementById('lightbox-img').src = '';
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowRight') shiftLightbox(1);
+            if (e.key === 'ArrowLeft') shiftLightbox(-1);
+        });
     </script>
-
 </body>
-
 </html>

@@ -267,11 +267,11 @@
                     <div class="glass gradient-border rounded-[30px] p-5 mt-12 floating shine relative overflow-hidden"
                         data-aos="zoom-in" data-aos-delay="600">
 
-                        <img src="./images/herbal.jpg" alt="Herbal Products"
+                        <img src="./images/newImages/poweder2.jpeg" alt="Herbal Products"
                             class="rounded-2xl h-52 sm:h-60 w-full object-cover" />
 
                         <h3 class="mt-5 text-xl font-semibold">
-                            Herbal Products
+                            Herbal Powders
                         </h3>
 
                     </div>
@@ -379,7 +379,7 @@
                     class="group relative overflow-hidden rounded-[35px] h-[480px] shadow-2xl"
                     data-aos="zoom-in">
 
-                    <img src="./images/herbalproduct.jpg" alt="Herbal Products"
+                    <img src="./images/newImages/poweder2.jpeg" alt="Herbal Products"
                         class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition duration-700" />
 
                     <div
@@ -388,11 +388,11 @@
                     <div class="absolute bottom-0 p-8">
 
                         <h3 class="text-3xl font-semibold">
-                            Herbal & Food Products
+                            Powders
                         </h3>
 
                         <p class="text-gray-300 mt-4 leading-7">
-                            Natural dehydrated food and herbal powders.
+                            Herbal and Dehydrated Powders.
                         </p>
 
                     </div>
@@ -527,23 +527,39 @@
 
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mt-20">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-5 mt-20">
 
-                <img src="./images/towel.jpeg"
-                    class="rounded-[25px] h-56 object-cover w-full hover:scale-105 transition duration-500"
-                    data-aos="zoom-in" />
+                <img src="./images/newImages/towel1.jpeg"
+                    class="rounded-[25px] h-56 object-cover w-full hover:scale-105 transition duration-500 cursor-zoom-in"
+                    onclick="openLightbox(this.src)" data-aos="zoom-in" alt="Towels" />
 
-                <img src="./images/product.jpg" alt="Product Image"
-                    class="rounded-[25px] h-56 object-cover w-full hover:scale-105 transition duration-500"
-                    data-aos="zoom-in" data-aos-delay="100" />
+                <img src="./images/newImages/allDimaond.jpeg"
+                    class="rounded-[25px] h-56 object-cover w-full hover:scale-105 transition duration-500 cursor-zoom-in"
+                    onclick="openLightbox(this.src)" data-aos="zoom-in" data-aos-delay="100" alt="Diamonds" />
 
-                <img src="./images/imag.jpeg"
-                    class="rounded-[25px] h-56 object-cover w-full hover:scale-105 transition duration-500"
-                    data-aos="zoom-in" data-aos-delay="200" />
+                <img src="./images/newImages/MangoPickle.jpeg"
+                    class="rounded-[25px] h-56 object-cover w-full hover:scale-105 transition duration-500 cursor-zoom-in"
+                    onclick="openLightbox(this.src)" data-aos="zoom-in" data-aos-delay="200" alt="Mango Pickle" />
 
-                <img src="./images/herbal.jpg"
-                    class="rounded-[25px] h-56 object-cover w-full hover:scale-105 transition duration-500"
-                    data-aos="zoom-in" data-aos-delay="300" />
+                <img src="./images/newImages/stechu.jpeg"
+                    class="rounded-[25px] h-56 object-cover w-full hover:scale-105 transition duration-500 cursor-zoom-in"
+                    onclick="openLightbox(this.src)" data-aos="zoom-in" data-aos-delay="300" alt="Stole" />
+
+                <img src="./images/newImages/dimaondRing.jpeg"
+                    class="rounded-[25px] h-56 object-cover w-full hover:scale-105 transition duration-500 cursor-zoom-in"
+                    onclick="openLightbox(this.src)" data-aos="zoom-in" data-aos-delay="100" alt="Diamond Ring" />
+
+                <img src="./images/newImages/poweder2.jpeg"
+                    class="rounded-[25px] h-56 object-cover w-full hover:scale-105 transition duration-500 cursor-zoom-in"
+                    onclick="openLightbox(this.src)" data-aos="zoom-in" data-aos-delay="200" alt="Herbal Powder" />
+
+                <img src="./images/newImages/towel3.jpeg"
+                    class="rounded-[25px] h-56 object-cover w-full hover:scale-105 transition duration-500 cursor-zoom-in"
+                    onclick="openLightbox(this.src)" data-aos="zoom-in" data-aos-delay="300" alt="Towel" />
+
+                <img src="./images/newImages/NonVegPickle.jpeg"
+                    class="rounded-[25px] h-56 object-cover w-full hover:scale-105 transition duration-500 cursor-zoom-in"
+                    onclick="openLightbox(this.src)" data-aos="zoom-in" data-aos-delay="400" alt="Pickle" />
 
             </div>
 
@@ -598,26 +614,40 @@
 
     <!-- ===================== FOOTER ===================== -->
 
-    <div class="footer"></div>
+    <!-- LIGHTBOX MODAL -->
+    <div id="lightbox-overlay" role="dialog" aria-modal="true" onclick="closeLightbox()"
+         style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.92);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;">
+        <button id="lightbox-close" onclick="closeLightbox()" aria-label="Close"
+            style="position:fixed;top:18px;right:22px;width:48px;height:48px;border-radius:50%;background:rgba(212,175,55,0.15);border:1.5px solid rgba(212,175,55,0.5);color:#D4AF37;font-size:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10000;transition:background .3s,transform .3s;">
+            &times;
+        </button>
+        <img id="lightbox-img" src="" alt="Full view" onclick="event.stopPropagation()"
+            style="max-width:92vw;max-height:88vh;border-radius:18px;object-fit:contain;box-shadow:0 30px 80px rgba(0,0,0,0.8);animation:lbZoom .35s cubic-bezier(.22,.68,0,1.2);" />
+    </div>
+    <style>
+        #lightbox-overlay.active { display:flex !important; }
+        @keyframes lbZoom { from{opacity:0;transform:scale(0.78)} to{opacity:1;transform:scale(1)} }
+        #lightbox-close:hover { background:#D4AF37 !important; color:#000 !important; transform:rotate(90deg) scale(1.1); }
+    </style>
 
-
-    <!-- ===================== SCRIPTS ===================== -->
     <script src="nav.js"></script>
     <script src="footer.js"></script>
-    <!-- AOS -->
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 
     <script>
+        AOS.init({ duration: 1000, once: true });
 
-        AOS.init({
-            duration: 1000,
-            once: true,
-        });
-
-
-
-           
-
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox-overlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox-overlay').classList.remove('active');
+            document.getElementById('lightbox-img').src = '';
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
     </script>
 
 </body>
